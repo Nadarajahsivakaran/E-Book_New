@@ -1,0 +1,111 @@
+﻿@model Report
+
+<form asp-action="Report" method="get">
+    <div class="row">
+
+        <div class="col-2">
+            <div class="form-group mb-3">
+                <label asp-for="StartDate" class="form-label"></label>
+                <input asp-for="StartDate" name="StartDate" type="date" class="form-control">
+                <span class="text-danger" asp-validation-for="StartDate"></span>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <div class="form-group mb-3">
+                <label asp-for="EndDate" class="form-label"></label>
+                <input asp-for="EndDate" name="EndDate" type="date" class="form-control">
+                <span class="text-danger" asp-validation-for="EndDate"></span>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="form-group mb-3">
+                <label>Books</label>
+                <select asp-for="BookID" name="BookID" class="form-select mt-2" aria-label="Default select example">
+                    <option value="0">All</option>
+                    @foreach (var book in Model.Books)
+                    {
+                        <option value="@book.Id">@book.Title</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="col-3">
+            <div class="form-group mb-3">
+                <label>Users</label>
+                <select asp-for="UserID" name="UserID" class="form-select mt-2" aria-label="Default select example">
+                    <option value="0">All</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.Id">@user.UserName</option>
+                    }
+                </select>
+            </div>
+        </div>
+
+        <div class="col-2">
+            <button type="submit" class="btn btn-success btn-sm" style="margin-top:30px">Submit</button>
+        </div>
+
+    </div>
+</form>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">User</th>
+            <th scope="col">Date</th>
+            <th scope="col">Book</th>
+            <th scope="col">Image</th>
+            <th scope="col">Unit Price</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Sub Total</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @foreach (var order in Model.Orders)
+        {
+            int orderDetailCount = order.OrderDetails.Count;
+            bool isFirstRow = true;
+            double total = 0;
+            int totalQuantity = 0;
+
+            foreach (var orderDetail in order.OrderDetails)
+            {
+                double subTotal = orderDetail.Quantity * orderDetail.Book.Price;
+                total += subTotal;
+                totalQuantity += orderDetail.Quantity;
+
+                <tr>
+                    @if (isFirstRow)
+                    {
+                        <td rowspan="@orderDetailCount + 1">@order.User.FirstName</td>
+                        <td rowspan="@orderDetailCount + 1">@order.Date.ToString("yyyy-MM-dd")</td>
+                        isFirstRow = false;
+                    }
+
+                    <td>@orderDetail.Book.Title</td>
+                    <td>
+                        <img src="@orderDetail.Book.Image" alt="@orderDetail.Book.Title" style="width:50px; height:50px" />
+                    </td>
+                    <td>@orderDetail.Book.Price.ToString("F2")</td>
+                    <td>@orderDetail.Quantity</td>
+                    <td>@subTotal.ToString("F2")</td>
+
+                </tr>
+            }
+
+                // Add the totals row
+            <tr>
+                <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                <td><strong>@totalQuantity</strong></td>
+                <td><strong>@total.ToString("F2")</strong></td>
+                <td></td>
+            </tr>
+        }
+    </tbody>
+</table>

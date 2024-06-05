@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Order>
+
+<div class="container">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th scope="col">User</th>
+                <th scope="col">Book</th>
+                <th scope="col">Image</th>
+                <th scope="col">Unit Price</th>
+                <th scope="col">Quantity</th>
+                <th scope="col">Sub Total</th>
+              
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var order in Model)
+            {
+                int orderDetailCount = order.OrderDetails.Count;
+                bool isFirstRow = true;
+                double total = 0;
+                int totalQuantity = 0;
+
+                foreach (var orderDetail in order.OrderDetails)
+                {
+                    double subTotal = orderDetail.Quantity * orderDetail.Book.Price;
+                    total += subTotal;
+                    totalQuantity += orderDetail.Quantity;
+
+                    <tr>
+                        @if (isFirstRow)
+                        {
+                            <td rowspan="@orderDetailCount + 1">@order.User.FirstName</td>
+                            isFirstRow = false;
+                        }
+
+                        <td>@orderDetail.Book.Title</td>
+                        <td>
+                            <img src="@orderDetail.Book.Image" alt="@orderDetail.Book.Title" style="width:50px; height:50px" />
+                        </td>
+                        <td>@orderDetail.Book.Price.ToString("F2")</td>
+                        <td>@orderDetail.Quantity</td>
+                        <td>@subTotal.ToString("F2")</td>
+                        
+                    </tr>
+                }
+
+                // Add the totals row
+                <tr>
+                    <td colspan="4" class="text-end"><strong>Total:</strong></td>
+                    <td><strong>@totalQuantity</strong></td>
+                    <td><strong>@total.ToString("F2")</strong></td>
+                    <td></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

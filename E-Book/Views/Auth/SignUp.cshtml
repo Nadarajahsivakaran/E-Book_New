@@ -1,0 +1,38 @@
+﻿@model RegisterDTO
+
+<div class="container w-50 shadow p-3 mb-5 bg-white rounded mt-5">
+    <h1 class="text-center" style="color:purple">Register</h1>
+    <form method="post" action="SignUp">
+        <div class="form-group mb-3">
+            <label>First Name</label>
+            <input asp-for="FirstName" type="text" class="form-control" placeholder="Enter First Name">
+            <span class="text-danger" asp-validation-for="FirstName"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label>Email address</label>
+            <input asp-for="Email" type="email" class="form-control" placeholder="Email">
+            <span class="text-danger" asp-validation-for="Email"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Password</label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Password">
+            <span class="text-danger" asp-validation-for="Password"></span>
+        </div>
+
+        <div class="form-group mb-3">
+            <label>Role</label>
+            <select asp-for="Role" class="form-select" aria-label="Default select example">
+                <option value="User">User</option>
+                <option value="Admin">Admin</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Register</button>
+    </form>
+</div>
+
+
+@section scripts {
+    <Partial name="_ValidationScriptsPartial" />
+}

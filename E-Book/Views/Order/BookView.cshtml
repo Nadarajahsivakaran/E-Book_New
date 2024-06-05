@@ -1,0 +1,124 @@
+﻿@model Book
+
+<div class="card  shadow" style="height:85vh">
+    <div class="row">
+        <div class="col-md-4 col-lg-4 col-sm-12">
+            <img src="@Model.Image" class="card-img-top object-fit-cover p-1" style="height:85vh" alt="@Model.Title" />
+        </div>
+
+        <div class="col-md-4 col-lg-5 col-sm-12">
+            <input asp-for="Id" hidden id="BookId" />
+            <div class="card-body m-3">
+                <h1 class="card-title" style="color:purple">@Model.Title</h1>
+                <p class="card-text">
+                    @Model.Description
+                </p>
+                <div class="d-flex align-items-center">
+                    <h5 class="mb-0">Unit Price:</h5>
+                    <h4 class="mb-0 ms-2" style="color:#FF4500">@Model.Price.ToString("F2")</h4>
+                </div>
+                <div class="d-flex justify-content-between align-items-center w-50 my-3">
+                    <b>Quantity</b>
+                    <button id="btn_minus" class="btn btn-secondary" disabled onclick="setQuantity(-1)">
+                        <i class="fa-solid fa-minus"></i>
+                    </button>
+                    <h4 id="quantity">1</h4>
+                    <button class="btn btn-secondary" onclick="setQuantity(+1)">
+                        <i class="fas fa-plus"></i>
+                    </button>
+                </div>
+                <button class="btn btn-success btn-sm" onclick="AddToCart()">
+                    <b>Add To Cart</b>
+                </button>
+            </div>
+        </div>
+
+        <div class="col-md-4 col-lg-3 col-sm-12 mt-4">
+            <h1 class="card-title" style="color:purple">FeedBacks</h1>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <form method="post" action="@Url.Action("AddFeedBack", "Book")" class="p-3">
+                    <input type="hidden" name="bookId" value="@Model.Id" />
+                    <textarea name="feedBack" class="form-control" rows="4"></textarea>
+                    <button type="submit" class="btn btn-success btn-sm mt-2">Submit</button>
+                </form>
+            }
+
+            @if (Model.BookFeedBacks != null && Model.BookFeedBacks.Any())
+            {
+                <div class="feedback-section mt-3">
+                    @foreach (var feedback in Model.BookFeedBacks)
+                    {
+                        <div class="feedback-item mb-2">
+                            <strong>@feedback.User?.FirstName</strong>
+                            <p style="color:blue">@feedback.FeedBack</p>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <p>No feedback available for this book.</p>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <!-- Add SweetAlert CSS and JS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+
+    <script>
+        function setQuantity(value) {
+            let quantity = $("#quantity").html();
+
+            if (value == -1 && quantity > 1 || value == 1)
+                $("#quantity").html(parseInt(quantity) + parseInt(value));
+
+            let minusButton = $("#btn_minus");
+
+            if ($("#quantity").html() == 1)
+                minusButton.prop("disabled", true);
+            else
+                minusButton.prop("disabled", false);
+        }
+
+        function AddToCart() {
+            $.ajax({
+                url: '@Url.Action("AddToCart", "Order")',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    BookId: $("#BookId").val(),
+                    Quantity: parseInt($("#quantity").html())
+                },
+                success: function (response) {
+                    if (response.success) {
+                        if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Added to cart successfully!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    } else {
+                        if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

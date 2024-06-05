@@ -1,0 +1,68 @@
+﻿@model CreateBook
+
+<div class="container w-50 shadow p-3 bg-white rounded">
+    <h1 class="text-center" style="color:purple">Update Book</h1>
+
+    <form method="post" action="/Edit" enctype="multipart/form-data">
+        <input asp-for="Id" hidden>
+        <div class="row mb-3">
+
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Title" class="form-label"></label>
+                    <input asp-for="Title" type="text" class="form-control" placeholder="Enter Title">
+                    <span class="text-danger" asp-validation-for="Title"></span>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Author" class="form-label"></label>
+                    <input asp-for="Author" type="text" class="form-control" placeholder="Enter Author">
+                    <span class="text-danger" asp-validation-for="Author"></span>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <label asp-for="PublishedDate" class="form-label">Published Date</label>
+                    <input asp-for="PublishedDate" type="date" class="form-control" placeholder="Enter Published Date">
+                    <span class="text-danger" asp-validation-for="PublishedDate"></span>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <label asp-for="NoOfCopies" class="form-label">No Of Copies</label>
+                    <input asp-for="NoOfCopies" type="number" class="form-control" placeholder="Enter No Of Copies">
+                    <span class="text-danger" asp-validation-for="NoOfCopies"></span>
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <label asp-for="ImagePath" class="form-label"></label>
+                    <input asp-for="ImagePath" type="file" class="form-control">
+                </div>
+            </div>
+
+            <div class="col-6">
+                <div class="form-group mb-3">
+                    <label asp-for="Price" class="form-label"></label>
+                    <input asp-for="Price" type="number" class="form-control" placeholder="Enter Price">
+                    <span class="text-danger" asp-validation-for="Price"></span>
+                </div>
+            </div>
+
+            <div class="col-12">
+                <textarea name="Description" class="form-control" rows="5">@Model.Description</textarea>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">Update</button>
+    </form>
+</div>
+
+@section scripts {
+    <Partial name="_ValidationScriptsPartial" />
+}

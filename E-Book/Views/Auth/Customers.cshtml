@@ -1,0 +1,32 @@
+﻿@model IEnumerable<UserWithRolesDTO>
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">ID</th>
+            <th scope="col">Email</th>
+            <th scope="col">User Name</th>
+
+        </tr>
+    </thead>
+
+    <tbody>
+        @{
+
+            int index = 1;
+        }
+        @foreach (var customer in Model)
+        {
+            <tr>
+                <td>@index</td>
+                <td>@customer.Id</td>
+                <td>@customer.Email</td>
+                <td>@customer.UserName</td>
+            </tr>
+            index++;
+        }
+
+
+    </tbody>
+</table>

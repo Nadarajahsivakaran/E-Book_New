@@ -1,0 +1,22 @@
+﻿@model LoginDTO
+
+<div class="container w-50 shadow p-3 mb-5 bg-white rounded mt-5">
+    <h1 class="text-center" style="color:purple">Login</h1>
+    <form method="post" action="SignIn">
+        <div class="form-group mb-3">
+            <label>Email address</label>
+            <input asp-for="UserName" type="email" class="form-control" placeholder="Enter email">
+            <span class="text-danger" asp-validation-for="UserName"></span>
+        </div>
+        <div class="form-group mb-3">
+            <label>Password</label>
+            <input asp-for="Password" type="password" class="form-control" placeholder="Password">
+            <span class="text-danger" asp-validation-for="Password"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary  w-100">Login</button>
+    </form>
+</div>
+@section scripts {
+    <Partial name="_ValidationScriptsPartial" />
+}

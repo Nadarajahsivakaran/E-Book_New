@@ -1,0 +1,43 @@
+﻿@model IEnumerable<Book>
+
+<div class="d-flex justify-content-end mb-3">
+    <a type="button" class="btn btn-success btn-sm" asp-controller="Book" asp-action="Create">Add Book</a>
+</div>
+
+<table class="table table-hover table-dark">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Author</th>
+            <th scope="col">Published Date</th>
+            <th scope="col">No Of Copies</th>
+            <th scope="col">Price</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count() > 0)
+        {
+            @foreach (var book in Model)
+            {
+                <tr>
+                    <td>@book.Title</td>
+                    <td>@book.Author</td>
+                    <td>@book.PublishedDate.ToString("MM/dd/yyyy")</td>
+                    <td>@book.NoOfCopies</td>
+                    <td>@book.Price.ToString("F2")</td>
+                    <td>
+                        <a type="button" class="btn btn-primary btn-sm" asp-controller="Book" asp-action="Edit" asp-route-id="@book.Id"><i class="bi bi-pencil-square"></i></a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="6">No Records</td>
+            </tr>
+        }
+
+    </tbody>
+</table>

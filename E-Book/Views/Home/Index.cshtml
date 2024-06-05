@@ -1,0 +1,74 @@
+﻿@model IEnumerable<Book>
+
+<form method="GET" action="@Url.Action("Index", "Home")">
+    <div class="d-flex justify-content-end mb-3">
+        <div class="input-group" style="max-width: 300px;">
+            <input type="text" name="search" class="form-control mx-1" placeholder="Search ..." value="@ViewBag.Search">
+            <span class="input-group-btn">
+                <button type="submit" class="btn btn-outline-success my-2 my-sm-0">Search</button>
+            </span>
+        </div>
+    </div>
+</form>
+
+<div class="row">
+    @foreach (var book in Model)
+    {
+        <div class="col-3 mb-3">
+            <div class="card shadow p-1 bg-white rounded" style="width: 16rem;">
+                <img class="card-img-top" src="@book.Image" alt="Card image cap" style="height: 180px; object-fit: cover">
+                <div class="card-body">
+                    <h5 class="card-title" style="color:purple">@book.Title</h5>
+                    <p class="card-text">Author : @book.Author</p>
+                    <p class="card-text">Published Date: @book.PublishedDate.ToString("d")</p>
+                    <div class="d-flex justify-content-between">
+                        <a class="btn btn-sm btn-primary" asp-controller="Order" asp-action="BookView" asp-route-id="@book.Id">View</a>
+                        <button class="btn btn-sm btn-outline-danger" onclick="AddToCart(@book.Id)">Add To Cart</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script>
+        function AddToCart(bookId) {
+
+            $.ajax({
+                url: '@Url.Action("AddToCart", "Order")',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    BookId: bookId,
+                    Quantity: 1
+                },
+                success: function (response) {
+                    if (response.success) {
+                        if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            Swal.fire({
+                                title: 'Success',
+                                text: 'Added to cart successfully!',
+                                icon: 'success',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    } else {
+                        if (response.redirectUrl) {
+                            window.location.href = response.redirectUrl;
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error',
+                                confirmButtonText: 'OK'
+                            });
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+}

@@ -1,4 +1,4 @@
-﻿using E_Book.Areas.Identity.Pages.Account;
+﻿
 using E_Book.DataAccess.IRepository;
 using E_Book.Models;
 using Microsoft.AspNetCore.Identity;
